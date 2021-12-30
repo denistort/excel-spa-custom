@@ -2,20 +2,26 @@
 @import "mixins";
 
 .excel__table {
-  position: absolute;
-  left: 0;
-  right: 0;
   top: $header-height + $toolbar-height + $formula-height;
   overflow-x: auto;
   padding-bottom: 2px;
+	height: 100%;
 
   .row {
     display: flex;
     flex-direction: row;
     min-height: 20px;
     height: $row-height;
+		position: relative;
   }
-
+	.col-resize, .row-resize{
+		position: absolute;
+		background-color: #0000fd8c;
+		opacity: 0;
+		// visibility: hidden;
+		z-index: 10;
+		transition: .2s ease;
+	}
   .row-info {
     display: flex;
     justify-content: center;
@@ -25,6 +31,18 @@
     border: 1px solid $border-color;
     background: #f8f9fa;
     border-top: none;
+		position: relative;
+		.row-resize{
+			bottom: 0;
+			right: 0;
+			width: 100px;
+			height: 4px;
+			cursor: row-resize;
+			&:hover {
+				opacity: 1;
+				visibility: visible;
+			}
+		}
   }
 
   .row-data {
@@ -42,7 +60,20 @@
     border-top: 0;
     border-left: 0;
     height: 100%;
+		position: relative;
+		.col-resize{
+			top: 0;
+			right: 0;
+			width: 4px;
+			height: 500px;
+			cursor: w-resize;
+			&:hover{
+				opacity: 1;
+				visibility: visible;
+			}
+		}
   }
+
 
   .cell {
     min-width: 40px;
