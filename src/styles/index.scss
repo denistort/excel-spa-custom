@@ -21,9 +21,11 @@ body {
 .excel {
   position: relative;
   color: #888;
-  height: 100%;
+  height: 100vh;
   max-width: 100%;
   font-size: .8rem;
+	display: flex;
+	flex-direction: column;
 }
 
 

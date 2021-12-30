@@ -1,4 +1,4 @@
-import { capitalizeFirstChar, getMethodName } from "./utils";
+import { getMethodName } from "./utils";
 
 export class DOMListener {
   constructor($root, listeners = []) {

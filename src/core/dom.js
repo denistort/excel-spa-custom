@@ -3,6 +3,10 @@ class Dom {
 		this.$el = typeof selector === 'string' ? document.querySelector(selector) : selector;
 	}
 
+	get dataset() {
+		return this.$el.dataset;
+	}
+
 	html(html){
 		if(typeof html === 'string'){
 			this.$el.innerHTML = html;
@@ -32,6 +36,25 @@ class Dom {
 		}
 
 		return this
+	}
+
+	closest(selector){
+		return $(this.$el.closest(selector))
+	}
+
+	getCoords(){
+		return this.$el.getBoundingClientRect();
+	}
+
+	findAll(selector){
+		return this.$el.querySelectorAll(selector)
+	}
+
+	css(styles = {}) {
+		if(Object.keys(styles).length > 0){
+			Object.entries(styles).map(([key, value]) => this.$el.style[key] = value);
+		}
+		return this;
 	}
 }
 
