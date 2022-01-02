@@ -86,12 +86,12 @@
     color: #111;
     white-space: nowrap;
     outline: none;
-
+		transition: 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
 
     &.selected {
       border: none;
-      outline: 2px solid #3c74ff;
-      z-index: 2;
+			box-shadow: inset 0px 0px 0px 2px #3c74ff;
+      z-index: 1000;
     }
   }
 

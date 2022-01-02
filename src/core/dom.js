@@ -6,7 +6,16 @@ class Dom {
 	get dataset() {
 		return this.$el.dataset;
 	}
-
+	id(parse) {
+		if(parse){
+			const parsed = this.id().split(':')
+			return {
+				row: Number(parsed[0]),
+				col: Number(parsed[1])
+			}
+		}
+		return this.$el.dataset.id
+	}
 	html(html){
 		if(typeof html === 'string'){
 			this.$el.innerHTML = html;
@@ -37,7 +46,13 @@ class Dom {
 
 		return this
 	}
-
+	text(text) {
+		if(text){
+			this.$el.textContent = text;
+			return this
+		} 
+		return this.$el.textContent
+	}
 	closest(selector){
 		return $(this.$el.closest(selector))
 	}
@@ -46,8 +61,39 @@ class Dom {
 		return this.$el.getBoundingClientRect();
 	}
 
+	find(selector){
+		return $(this.$el.querySelector(selector))
+	}
 	findAll(selector){
 		return this.$el.querySelectorAll(selector)
+	}
+	focus() {
+		this.$el.focus()
+		return this;
+	}
+
+
+	//Styling adding css classes or deleting
+	addClass(className){
+		this.$el.classList.add(className);
+		return this
+	};
+	removeClass(className){
+		this.$el.classList.remove(className);
+		return this
+	};
+	toggleClass(className){
+		this.$el.classList.toggle(className);
+		return this
+	};
+	isHasClass(className){
+		return this.$el.classList.contains(className);
+	}
+	addClasses(...bunchOfClasses){
+		if(bunchOfClasses.length > 0) {
+			bunchOfClasses.forEach(clasS => this.$el.classList.add(clasS))
+		}
+		return this
 	}
 
 	css(styles = {}) {
