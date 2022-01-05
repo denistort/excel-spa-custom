@@ -27,4 +27,11 @@ export class TableSelection {
 			})
 		}
 	}
+
+	applyStyles(style){
+		this.group.forEach($el => $el.css(style))
+	}
+	get getAllGroudIds(){
+		return this.group.map($elem => $elem.id())
+	}
 }

@@ -2,10 +2,8 @@
 @import "mixins";
 
 .excel__table {
-  top: $header-height + $toolbar-height + $formula-height;
   overflow-x: auto;
   padding-bottom: 2px;
-	height: 100%;
 
   .row {
     display: flex;
@@ -18,7 +16,6 @@
 		position: absolute;
 		background-color: #0000fd8c;
 		opacity: 0;
-		// visibility: hidden;
 		z-index: 10;
 		transition: .2s ease;
 	}

@@ -6,7 +6,7 @@
   position: relative;
   display: inline-block;
   color: rgba(0, 0, 0, .7);
-
+	transition: 0.3 ease;
   & i {
     font-size: 18px;
   }

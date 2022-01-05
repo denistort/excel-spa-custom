@@ -1,31 +1,25 @@
+import { $ } from '../../core/dom';
 import { ExcelComponent } from '../../core/ExcelComponent';
+import * as actions from '../../store/actionCreators';
+import { generateHeeaderTemplate } from './header.template';
 
 export class Header extends ExcelComponent {
 	static className = 'excel__header';
 	constructor($root, options) {
 		super($root, {
 			name: 'Header',
-			listeners: [],
+			listeners: ['input'],
+			subOnStore: ['tableName'],
 			...options
 		})
 	}
+
+	onInput(event){
+		console.log($(event.target).value)
+		this.$dispatch(actions.tableNameChange($(event.target).value))
+	}
+
   toHtml() {
-    return (
-			`
-			<input type="text" class="input" value="Новая таблица" />
-
-      <div>
-
-        <div class="button">
-          <i class="material-icons">delete</i>
-        </div>
-
-        <div class="button">
-          <i class="material-icons">exit_to_app</i>
-        </div>
-
-      </div>
-			`
-		)
+    return generateHeeaderTemplate(this.$getState());
   }
 }

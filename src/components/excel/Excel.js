@@ -1,17 +1,20 @@
 import { $ } from "../../core/dom";
 import { Observer } from "../../core/Observer";
+import { StoreSubscriber } from "../../store/StoreSubscriber";
 
 export class Excel {
   constructor(selector, options) {
     this.$el = $(selector);
     this.components = options.components || [];
+		this.store = options.store;
 		this.observer = new Observer();
-
+		this.storeSubscriber = new StoreSubscriber(this.store);
   }
 
   getRoot() {
 		const componentOptions = {
-			observer: this.observer
+			observer: this.observer,
+			store: this.store
 		};
 
 		const $root = $.create('div', 'excel');
@@ -28,12 +31,14 @@ export class Excel {
 	
   render() {
 		this.$el.append(this.getRoot());
+		this.storeSubscriber.subscribeComponents(this.components)
 		this.components.forEach(component => component.init())
 	}
 
 
 
 	destroy(){
+		this.storeSubscriber.unsubscribeFromStore();
 		this.components.forEach(component => component.destroy());
 	}
 }
