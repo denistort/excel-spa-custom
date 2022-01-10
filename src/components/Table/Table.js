@@ -1,9 +1,13 @@
 import { ExcelComponent } from '../../core/ExcelComponent';
 import { createTable } from './table.template';
-import { onMouseDownHandler } from './onMousedown';
+import { resizeHandler } from './onMousedown';
 import { TableSelection } from './TableSelection';
-import { nextSelector } from './utils';
+import { isCell, nextSelector, shiftPressed } from './utils';
 import { $ } from '../../core/dom';
+import { selectionCells } from './selectionCell';
+import * as actions from '../../store/actionCreators';
+import { defaultStyle } from '../../core/constants';
+import { parseCell } from '../../core/parse';
 
 export class Table extends ExcelComponent {
 	static className = 'excel__table';
@@ -14,59 +18,87 @@ export class Table extends ExcelComponent {
 			...options
 		})
 	}
+
   toHtml() {
-    return createTable(10);
+    return createTable(20, this.$getState());
   }
+
 	prepare(){
 		this.selection = new TableSelection();
 	}
+
 	init() {
 		super.init()
 		const $cell = this.$root.find('[data-id="0:0"]');
 		this.selection.select($cell);
 		//observer
 		this.$subscribe('formula:input', text => {
-			this.selection.current.text(text)
-			console.log('formula:input' + ' ' + text)
+			const result = parseCell(...text);
+			this.selection.current
+				.attr('data-value', ...text)
+				.text(result)
+			this.updateTextInStore(String(text));
 		})
 		this.$subscribe('formula:keydown', _ => {
 			this.selection.current.focus();
 		})
+		this.$subscribe('toolbar:applyStyle', value => {
+			this.selection.applyStyles(...value)
+			this.$dispatch(actions.applyStyles({
+				ids: this.selection.getAllGroudIds,
+				value,
+			}))
+		})
+	}
+	updateTextInStore(value){
+		this.$dispatch(actions.changeCellValue({
+			id: this.selection.current.id(),
+			value
+		}))
 	}
 	onInput(event){
-		if(event.target.dataset.type === 'cell'){
-			this.$emit('table:oninput',$(event.target).text())
+		if(isCell(event)){
+			this.updateTextInStore($(event.target).text())
+			//when you change
+			$(event.target).attr('data-value', $(event.target).text())
 		}
 	}
+
+	async resizeTable(event, $root) {
+		try {
+			const data = await resizeHandler(event, $root);
+			this.$dispatch(actions.tableResize(data));
+		} catch (error) {
+			console.warn(error.message)
+		}
+	}
+	selectCell(event){
+		const $cell = this.$root.find(`[data-id="${event.target.dataset.id}"]`);
+		this.selection.select($cell);
+		this.$emit('table:select', this.selection.current)
+		const defaultStyleKeys = Object.keys(defaultStyle);
+		const obj = $cell.getStyles(defaultStyleKeys);
+		this.$dispatch(actions.changeStyles(obj))
+	}
 	onMousedown(event){
-		/* DRAG  */
-		onMouseDownHandler(event, this.$root);
+		/* DRAG  RESIZING*/
+		this.resizeTable(event, this.$root);
 		/* 
 		Selection functionality
 		*/
-		if(event.target.dataset.type === 'cell'){
-			const target = $(event.target);
-			if(event.shiftKey === true){
-				const cols = range(current.id(true).col, target.id(true).col)
-				const rows = range(current.id(true).row, target.id(true).row)
-				
-				const ids = cols.reduce((acc, col) => {
-					rows.forEach(row => acc.push(`${row}:${col}`));
-					return acc;
-				}, [])
-				
-				const cells = ids.map(id => $root.find(`[data-id="${id}"]`))
-				this.selection.selectGroup(cells)
-	
-				} else {
-					const $cell = this.$root.find(`[data-id="${event.target.dataset.id}"]`);
-					this.selection.select($cell);
-					this.$emit('table:select', this.selection.current.text())
-
-				}
+		if(isCell(event)){
+			if(shiftPressed(event)){
+				selectionCells(
+					event, 
+					this.selection.current,
+					this.selection,
+					this.$root
+				)
+			} else {
+				this.selectCell(event)
 			}
+		}
 	}
-	onMouseup(){}
 	onKeydown(event){
 		const keys = [
 			'Enter', 

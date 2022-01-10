@@ -1,10 +1,13 @@
-class Dom {
+export class Dom {
 	constructor(selector){
 		this.$el = typeof selector === 'string' ? document.querySelector(selector) : selector;
 	}
 
 	get dataset() {
 		return this.$el.dataset;
+	}
+	get value() {
+		return this.$el.value;
 	}
 	id(parse) {
 		if(parse){
@@ -71,7 +74,13 @@ class Dom {
 		this.$el.focus()
 		return this;
 	}
-
+	attr(name, value){
+		if(value){
+			this.$el.setAttribute(name, value);
+			return this
+		}
+		return this.$el.getAttribute(name)
+	}
 
 	//Styling adding css classes or deleting
 	addClass(className){
@@ -101,6 +110,14 @@ class Dom {
 			Object.entries(styles).map(([key, value]) => this.$el.style[key] = value);
 		}
 		return this;
+	}
+
+	getStyles(styles = []){
+		// input => ['fontStyle'] output => {'fontStlye': '' or 'fontStlye': 'italic'};
+		return styles.reduce((res, s) => {
+			res[s] = this.$el.style[s]
+			return res 
+		}, {}) 
 	}
 }
 

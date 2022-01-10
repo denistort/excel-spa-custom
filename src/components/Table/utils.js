@@ -32,3 +32,6 @@ export const nextSelector = (key, {col, row}) => {
 
 	return `[data-id="${dataID.row}:${dataID.col}"]`
 }
+
+export const isCell = (event) => event.target.dataset.type === 'cell' ? true : false;
+export const shiftPressed = (event) => event.shiftKey === true ? true : false;

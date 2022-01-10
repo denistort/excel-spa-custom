@@ -1,11 +1,13 @@
 import { ExcelComponent } from '../../core/ExcelComponent';
-import { $ } from '../../core/dom';
+import { $, Dom } from '../../core/dom';
+
 export class Formula extends ExcelComponent {
   static className = 'excel__formula';
 	constructor($root, options) {
 		super($root, {
 			name: 'Formula',
-			listeners: ['input', 'click', 'keydown'],
+			listeners: ['input', 'keydown'],
+			subOnStore: ['currentText'],
 			...options
 		})
 	}
@@ -13,14 +15,19 @@ export class Formula extends ExcelComponent {
 		super.init();
 		const inputFormula = this.$root.find(`[data-type="formula-input"]`);
 
-		this.$subscribe('table:select', text => {
-			inputFormula.text(text);
-		})
-		this.$subscribe('table:oninput', text => {
-			inputFormula.text(text);
+		this.$subscribe('table:select', $cell => {
+			if(typeof $cell[0] === 'object'){
+				inputFormula.text($cell[0].dataset.value);
+			} else{ 
+				inputFormula.text($cell[0]);
+
+			}
 		})
 	}
-
+	storeChanged({currentText}){
+		const inputFormula = this.$root.find(`[data-type="formula-input"]`);
+		inputFormula.text(currentText);
+	}
 	onInput(event) {
 		this.$emit('formula:input', $(event.target).text());
 	}
@@ -29,10 +36,6 @@ export class Formula extends ExcelComponent {
 			event.preventDefault();
 			this.$emit('formula:keydown', 'ee')
 		}
-	}
-	onClick(event){
-		// this.removeDOMListeners();
-		// console.log('click work')
 	}
 
 	toHtml() {

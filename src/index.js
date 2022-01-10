@@ -1,12 +1,9 @@
-import { Excel } from './components/excel/Excel';
-import { Header } from './components/Header/Header';
-import { Toolbar } from './components/Toolbar/Toolbar';
-import { Formula } from './components/Formula/Formula';
-import { Table } from './components/Table/Table';
+import { Router } from "./core/Router/Router";
+import { DashboardPage } from "./Pages/Dashboard";
+import { ExcelPage } from "./Pages/ExcelPage";
 import './styles/index.scss';
 
-const app = new Excel('#app', {
-  components: [Header, Toolbar, Formula, Table]
+new Router('#app', {
+	dashboard: DashboardPage,
+	excel: ExcelPage
 });
-
-app.render();

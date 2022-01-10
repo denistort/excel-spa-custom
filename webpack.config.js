@@ -2,6 +2,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const babelPolylfill = require('babel-polyfill');
 
 let mode = 'development';
 
@@ -13,7 +14,7 @@ module.exports = {
   mode: mode,
   context: path.resolve(__dirname, 'src'),
   entry: {
-    index: './index.js'
+    index: ['@babel/polyfill', './index.js']
   },
   resolve: {
     extensions: ['.js'],
