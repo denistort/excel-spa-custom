@@ -1,4 +1,4 @@
-import { APPLY_STYLES, CHANGE_CELL_VALUE, CURRENT_STYLE_CELL, TABLE_NAME, TABLE_RESIZE } from "./types";
+import { APPLY_STYLES, CHANGE_CELL_VALUE, CURRENT_STYLE_CELL, LAST_UPDATE, TABLE_NAME, TABLE_RESIZE } from "./types";
 
 const value = (state, field, action) => {
 	const val = state[field] || {};
@@ -37,6 +37,10 @@ export const rootReducer = (state, action) => {
 				val[id] = {...val[id], ...action.data.value[0]};
 			});
 			return {...state, [field]: val, currentStyleCell: {...state.currentStyleCell, ...action.data.value}}
+
+		case LAST_UPDATE:
+			field = 'lastUpdate';
+			return {...state, [field]: new Date().toJSON()}
 		default: return state;
 	}
 }

@@ -19,7 +19,6 @@ export class Formula extends ExcelComponent {
 			if(typeof $cell[0] === 'object'){
 				inputFormula.text($cell[0].dataset.value);
 			} else{ 
-				console.log($cell)
 				inputFormula.text($cell[0]);
 
 			}

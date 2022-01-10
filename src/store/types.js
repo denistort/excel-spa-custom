@@ -3,4 +3,6 @@ export const CHANGE_CELL_VALUE = 'CHANGE_CELL_VALUE';
 export const APPLY_STYLES = 'APPLY_STYLES';
 export const CURRENT_STYLE_CELL = 'CURRENT_STYLE_CELL';
 export const TABLE_NAME = 'TABLE_NAME';
+export const LAST_UPDATE = 'LAST_UPDATE';
+
 

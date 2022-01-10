@@ -9,10 +9,14 @@ const defaultState = {
 	styleState: {},
 	dataTableState: {},
 	currentStyleCell: defaultStyle,
+	lastUpdate: new Date().toJSON()
 }
 const normalize = state => ({
 	...state, 
 	currentText: '',
 	currentStyleCell: defaultStyle,
 })
-export const initialState = normalize(storage('excel-state') || defaultState);
+export const normalizeInitialState = (name) => {
+	if(!storage(name)) return defaultState	
+	return normalize(storage(name));
+} 
